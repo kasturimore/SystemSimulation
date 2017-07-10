@@ -1,0 +1,28 @@
+
+# Cluster Analysis
+# Load Data ##########################
+clusterC1 <- read.csv("Wholesale customers data.csv", header = TRUE)
+
+colnames(clusterC1)
+
+
+# Use numerical data only
+clC1 <- clusterC1[, 2:8]
+row.names(clC1) <- clusterC1[, 1]
+colnames(clC1)
+
+# Clustering #############################
+
+# Create distance matrix
+dm1 <- dist(clC1)
+
+# Hierarchical clustering
+c1 <- hclust(dm1)
+c1    # Show info on clustering
+
+# Plot dendrogram of clusters
+plot(c1, main = "Wholesale customers data")
+
+# Put all together in one line
+plot(hclust(dist(clC1)))
+plot(hclust(dist(clC1)), main = "Wholesale customers data")
