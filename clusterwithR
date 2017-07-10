@@ -1,0 +1,33 @@
+data <-read.csv("Wholesale customers data.csv",header=T)
+summary(data)
+top.n.custs <- function (data,cols,n=5) { 
+  idx.to.remove <-integer(0) 
+  for (c in cols){ 
+    col.order <-order(data[,c],decreasing=T) 
+    idx <-head(col.order, n) 
+    idx.to.remove <-union(idx.to.remove,idx) 
+  }
+  return(idx.to.remove) 
+}
+top.custs <-top.n.custs(data,cols=3:8,n=5)
+length(top.custs)
+data[top.custs,] 
+data.rm.top <-data[-c(top.custs),] 
+set.seed(76964057) 
+k <-kmeans(data.rm.top[,-c(1,2)], centers=5) 
+k$centers
+table(k$cluster)
+rng<-2:20 
+tries<-100
+avg.totw.ss<-integer(length(rng))
+for(v in rng){
+  v.totw.ss<-integer(tries) 
+  for(i in 1:tries){
+    k.temp<-kmeans(data.rm.top,centers=v) 
+    v.totw.ss[i]<-k.temp$tot.withinss
+  }
+  avg.totw.ss[v-1]<-mean(v.totw.ss)
+}
+plot(rng,avg.totw.ss,type="b", main="Total Within SS by Various K",
+     ylab="Average Total Within Sum of Squares",
+     xlab="Value of K")
